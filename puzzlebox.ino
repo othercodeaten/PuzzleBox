@@ -50,7 +50,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #endif
 
 void setup()   {
-  
+
   /********************************* FROM BLUETOOTH LOOP ***********************/
   Serial.begin(115200);
   Serial.println("Bluefruit52 BLEUART Example");
@@ -84,11 +84,15 @@ void setup()   {
   blebas.begin();
   blebas.write(100);
 
+  Serial.println("stugottz");
+
   // Set up and start advertising
   startAdv();
 
   Serial.println("Please use Adafruit's Bluefruit LE app to connect in UART mode");
   Serial.println("Once connected, enter character(s) that you wish to send");
+
+  //loadparam();
 
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3D (for the 128x64)
@@ -99,7 +103,7 @@ void setup()   {
   digitalWrite(inPin, HIGH);   // turn on the built in pull-up resistor
   pinMode(outPin, OUTPUT);
   /*******************************************/
-  
+
   // Show image buffer on the display hardware.
   // Since the buffer is intialized with an Adafruit splashscreen
   // internally, this will display the splashscreen.
@@ -178,7 +182,7 @@ void connect_callback(uint16_t conn_handle)
 
   Serial.print("Connected to ");
   Serial.println(central_name);
-  
+
   CONNECT = 1;
 }
 
@@ -288,22 +292,30 @@ void displaytemp() {
   }
 
   display.clearDisplay();
-}
+} 
 void loadparam() {
 
-/*int temp1;
-int temp2;
-int photo1;
-int photo2;
-bool rightsideup = HIGH; */
+  /*int temp1;
+    int temp2;
+    int photo1;
+    int photo2;
+    bool rightsideup = HIGH; */
 
-  
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("Enter Temp Range: ");
+  display.display();
+
+  delay(2000);
+
+
 }
 void displaypr() {
 
   photocellReading = analogRead(photocellPin);
 
- // Serial.print("Analog reading = ");
+  // Serial.print("Analog reading = ");
   //Serial.println(photocellReading);     // the raw analog reading
 
   // LED gets brighter the darker it is at the sensor

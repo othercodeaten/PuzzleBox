@@ -15,17 +15,14 @@ int LEDbrightness;
 /**************** BALL TILT *****************/
 int inPin = 5;         // the number of the input pin
 int outPin = 30;       // the number of the output pin
-
 int LEDstate = HIGH;      // the current state of the output pin
 int reading;           // the current reading from the input pin
 int previous = LOW;    // the previous reading from the input pin
 /**************** BLUETOOTH ******************/
-
 // BLE Service
 BLEDis  bledis;
 BLEUart bleuart;
 BLEBas  blebas;
-
 // Software Timer for blinking RED LED
 SoftwareTimer blinkTimer;
 
@@ -34,7 +31,8 @@ SoftwareTimer blinkTimer;
 long time = 0;         // the last time the output pin was toggled
 long debounce = 50;   // the debounce time, increase if the output flickers
 
-/********************************************/
+/***************** CONNECTOR BOOL **************/
+int CONNECT = 0;
 
 #define MANUFACTURER_ID 0x0008 /*for bluetooth connectivity*/
 
@@ -50,24 +48,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #endif
 
 void setup()   {
-  Serial.begin(9600);
-
-  // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3D (for the 128x64)
-  // init done
-
-  pinMode(inPin, INPUT);
-  digitalWrite(inPin, HIGH);   // turn on the built in pull-up resistor
-  pinMode(outPin, OUTPUT);
-
-  // Show image buffer on the display hardware.
-  // Since the buffer is intialized with an Adafruit splashscreen
-  // internally, this will display the splashscreen.
-  display.display();
-
-  // Clear the buffer.
-  display.clearDisplay();
-
+  
   /********************************* FROM BLUETOOTH LOOP ***********************/
   Serial.begin(115200);
   Serial.println("Bluefruit52 BLEUART Example");
@@ -107,6 +88,24 @@ void setup()   {
   Serial.println("Please use Adafruit's Bluefruit LE app to connect in UART mode");
   Serial.println("Once connected, enter character(s) that you wish to send");
 
+  // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3D (for the 128x64)
+  // init done
+
+  /************** BALL TILT STUFF ************/
+  pinMode(inPin, INPUT);
+  digitalWrite(inPin, HIGH);   // turn on the built in pull-up resistor
+  pinMode(outPin, OUTPUT);
+  /*******************************************/
+  
+  // Show image buffer on the display hardware.
+  // Since the buffer is intialized with an Adafruit splashscreen
+  // internally, this will display the splashscreen.
+  display.display();
+
+  // Clear the buffer.
+  display.clearDisplay();
+  
 
 }
 
@@ -179,6 +178,8 @@ void connect_callback(uint16_t conn_handle)
 
   Serial.print("Connected to ");
   Serial.println(central_name);
+  
+  CONNECT = 1;
 }
 
 void disconnect_callback(uint16_t conn_handle, uint8_t reason)
@@ -188,6 +189,8 @@ void disconnect_callback(uint16_t conn_handle, uint8_t reason)
 
   Serial.println();
   Serial.println("Disconnected");
+
+  CONNECT = 0;
 }
 
 /**
@@ -291,8 +294,8 @@ void displaypr() {
 
   photocellReading = analogRead(photocellPin);
 
-  Serial.print("Analog reading = ");
-  Serial.println(photocellReading);     // the raw analog reading
+ // Serial.print("Analog reading = ");
+  //Serial.println(photocellReading);     // the raw analog reading
 
   // LED gets brighter the darker it is at the sensor
   // that means we have to -invert- the reading from 0-1023 back to 1023-0

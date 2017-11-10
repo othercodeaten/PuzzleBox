@@ -3,19 +3,17 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <bluefruit.h>
-
 /*********** PINOUTS FOR SENSORS ***********/
 int sensorPin = 2; /* this is for the thermal sensor */
-
 /*************** PHOTO CELL ****************/
-int photocellPin = 3;     // the cell and 10K pulldown are connected to a0
-int photocellReading;     // the analog reading from the sensor divider
+int photocellPin = 3;    // the cell and 10K pulldown are connected to a0
+int photocellReading;    // the analog reading from the sensor divider
 int LEDpin = 30;         // connect Red LED to pin 11 (PWM pin)
 int LEDbrightness;
 /**************** BALL TILT *****************/
 int inPin = 5;         // the number of the input pin
 int outPin = 30;       // the number of the output pin
-int LEDstate = HIGH;      // the current state of the output pin
+int LEDstate = HIGH;   // the current state of the output pin
 int reading;           // the current reading from the input pin
 int previous = LOW;    // the previous reading from the input pin
 /**************** BLUETOOTH ******************/
@@ -25,15 +23,19 @@ BLEUart bleuart;
 BLEBas  blebas;
 // Software Timer for blinking RED LED
 SoftwareTimer blinkTimer;
-
 // the follow variables are long's because the time, measured in miliseconds,
 // will quickly become a bigger number than can be stored in an int.
 long time = 0;         // the last time the output pin was toggled
-long debounce = 50;   // the debounce time, increase if the output flickers
-
+long debounce = 50;    // the debounce time, increase if the output flickers
 /***************** CONNECTOR BOOL **************/
 int CONNECT = 0;
-
+/******************** PARAMS *******************/
+int temp1;
+int temp2;
+int photo1;
+int photo2;
+bool rightsideup = HIGH;
+/************************************************/
 #define MANUFACTURER_ID 0x0008 /*for bluetooth connectivity*/
 
 #define OLED_RESET 29
@@ -105,8 +107,6 @@ void setup()   {
 
   // Clear the buffer.
   display.clearDisplay();
-  
-
 }
 
 void loop() {
@@ -289,7 +289,16 @@ void displaytemp() {
 
   display.clearDisplay();
 }
+void loadparam() {
 
+/*int temp1;
+int temp2;
+int photo1;
+int photo2;
+bool rightsideup = HIGH; */
+
+  
+}
 void displaypr() {
 
   photocellReading = analogRead(photocellPin);

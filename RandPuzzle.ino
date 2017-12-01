@@ -31,12 +31,13 @@ long debounce = 50;    // the debounce time, increase if the output flickers
 float temperatureF;
 float temperatureC;
 /******************** PARAMS *******************/
+int c;
 int temp1;
 int temp2;
 int photo1;
 int photo2;
 bool tilted;
-int wincount;
+int wincount = 0;
 /***********************************************/
 #define MANUFACTURER_ID 0x0008 /*for bluetooth connectivity*/
 
@@ -123,13 +124,30 @@ void loop() {
     tiltevent();
     displaypr();
     displaytemp();
-  } */
-    tiltevent();
-    displaypr();
-    displaytemp();
- 
+    } */
 
-  
+  while (wincount != 3) {
+    if (wincount == 0) {
+      tiltevent();
+
+    }
+    if (wincount == 1) {
+      displaypr();
+      Serial.println("displayed pr");
+    }
+    if (wincount == 2) {
+      displaytemp();
+      Serial.println("displayed temp");
+    }
+  }
+
+  Serial.println("You won the game!");
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("YOU WON THE GAME!");
+  delay(2000);
 }
 
 void blue () {
@@ -265,6 +283,7 @@ void displaytemp() {
     display.println("YOU GOT THE RIGHT TEMP!");
     display.display();
     //delay(2000);
+    //display.clearDisplay();
     wincount++;
   }
 
@@ -318,6 +337,7 @@ void tiltevent() {
 
   // Save the last reading so we keep a running tally
   previous = reading;
+  wincount++;
 }
 // intialize vars...
 void initializer() {

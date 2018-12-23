@@ -1,5 +1,5 @@
 # PuzzleBox
-This is the featured repository for Mario and Art's PuzzleBox
+This is the featured repository for PuzzleBox
 
 This is a simple device with 3 sensors:
 Light, Temporature and orientation.
